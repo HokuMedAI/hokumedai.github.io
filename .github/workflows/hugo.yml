@@ -22,9 +22,6 @@ jobs:
       - name: Build
         run: hugo --minify
 
-      - name: Create .nojekyll file
-        run: touch ./public/.nojekyll
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

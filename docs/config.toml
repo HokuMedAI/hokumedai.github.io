@@ -1,0 +1,4 @@
+baseURL = 'https://hokumedai.github.io/'
+languageCode = 'ja-jp'
+title = '北医AI研究会'
+theme = 'ananke'  # デフォルトとして

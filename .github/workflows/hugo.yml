@@ -2,7 +2,7 @@ name: Deploy Hugo
 
 on:
   push:
-    branches: [ main ]  # メインブランチにプッシュされたときに実行
+    branches: [ main ]
 
 jobs:
   build:
@@ -11,19 +11,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          submodules: true  # テーマがサブモジュールの場合に必要
+          submodules: true
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: 'latest'
-          extended: true  # SCSS/SASS を使う場合に必要
+          extended: true
 
       - name: Build
         run: hugo --minify
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
 

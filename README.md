@@ -1,8 +1,8 @@
-# 🌐 プロジェクト名
+# 🌐 北医AI研究会 [https://hokumedai.github.io/](https://hokumedai.github.io/)
+
 
 このリポジトリは、[Hugo](https://gohugo.io/) を使用して構築された北医AI研究会のホームページのソースコードです。  
 GitHub Pages を利用してサイトを公開しており、複数のブランチで開発・公開を管理しています。
-[https://hokumedai.github.io/](https://hokumedai.github.io/)
 
 ---
 
@@ -34,7 +34,7 @@ hugo --minify
 
 ## 🌿 ブランチ運用ルール
 
-このリポジトリでは、以下の3つのブランチを使って開発・公開を行っています。
+このリポジトリでは、以下の2つのブランチを使って開発・公開を行っています。
 
 ### 🧪 `develop` ブランチ（開発用）
 
@@ -42,56 +42,59 @@ hugo --minify
 - 記事追加、デザイン調整、バグ修正などの編集はここで行います
 - テスト・レビュー後に `main` にマージします
 
-### 🚀 `main` ブランチ（リリース用）
+### 🚀 `main` ブランチ（公開用）
 
 - `develop`で完成した機能をまとめる安定ブランチです
-- このブランチの内容をもとに **Hugoでビルド** を行います
-- 原則として `develop` からマージのみ行い、直接編集しません
-
-### 🌐 `gh-pages` ブランチ（公開用）
-
-- GitHub Pages で公開される静的ファイルを管理
-- `main` でビルドした成果物（`public/`）を反映します
-- Webサイトは以下のURLで公開されます：
-
-```
-https://<ユーザー名>.github.io/<リポジトリ名>/
-```
+- このブランチの内容をもとに **Hugoでビルド** を行い、ビルド成果物をこのブランチに含めて公開します。（５/９現在ではまだ公開していません）
+- GitHub Pagesは、この`main`ブランチ（またはその中の`/docs`フォルダ）からサイトを公開するように設定します。（管理者が行います）
+- 原則として `develop` からマージのみ行い、直接編集しません（ビルド成果物のコミットを除く）。
 
 ---
 
 ## 📄 運用の流れ（Hugo + Git）
 
 1. `develop` ブランチで作業
-2. 完成したら `main` にマージ
-3. `main` 上で以下のコマンドでビルド：
+2. 完成したら PullRequest
+3.  `main` にマージして `main` 上で以下のコマンドでビルド（管理者が行います）：
 
 ```bash
 hugo --minify
 ```
 
-4. `gh-pages` ブランチに切り替え
-5. `public/` フォルダの中身をコピー＆コミットして push
+4. ビルドされた `public/` ディレクトリの中身を、`main` ブランチの公開ディレクトリ（例：ルートまたは `/docs`）にコピー＆コミットして push
 
 ---
 
 ## 🔧 公開手順（手動デプロイ）
 
 ```bash
-# mainブランチでビルド
+# developブランチでの作業が完了したらmainブランチにマージ
 git switch main
+git merge develop
+
+# mainブランチでビルド
 hugo --minify
 
-# gh-pagesに切り替え
-git switch gh-pages
+# public/ の内容を公開ディレクトリにコピー（例：ルートに公開する場合）
+# 注意: 既存のファイルを上書きします。必要に応じてバックアップや調整を行ってください。
+#      .gitディレクトリなどを消さないように注意。
+#      もしルートに .gitignore があれば、public/* を無視する設定は一時的にコメントアウトするか、
+#      cp -r public/* ./ の代わりに、必要なファイルだけを慎重にコピーしてください。
+#      より安全な方法としては、一旦別の場所に public の中身を移し、
+#      不要なファイルを削除してからルートに移動するなどの手段があります。
+# 例:
+# rm -rf !(public|.git|.gitignore|README.md|その他の管理ファイル) # publicと管理ファイル以外を削除
+# cp -r public/* ./                                          # publicの中身をコピー
+# git add .
+# git commit -m "公開用にビルド成果物を更新"
+# git push origin main
 
-# public/ の内容をコピー（上書き）
-cp -r ../public/* ./
-
-# コミット & プッシュ
-git add .
-git commit -m "公開用にビルド成果物を更新"
-git push origin gh-pages
+# (よりシンプルな例: GitHub Pagesが /docs から配信する設定の場合)
+# rm -rf docs/* # docsフォルダの中身をクリア
+# cp -r public/* docs/
+# git add docs/
+# git commit -m "公開用にビルド成果物を更新 (docs/)"
+# git push origin main
 ```
 
 ---

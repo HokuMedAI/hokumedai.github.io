@@ -25,9 +25,12 @@ git submodule update --init --recursive
 
 ### 一時的なブランチ
 
-- 作業内容が明確に分かれている場合は新しくブランチを切る。
-- 例: `yamada/update-README`, `yamada/fix-navbar`
+- 作業内容が明確に分かれている場合は新しくブランチを切る。(例: `yamada/README-update`)
 - マージ後は必ず削除する。
+
+```bash
+# 例
+```
 
 ## Pull Request（PR）のルール
 
@@ -40,3 +43,7 @@ git submodule update --init --recursive
 - HTMLやビルド成果物を手元で生成してPushするのは禁止。
 - HTMLは全てGitHub Actionsで自動生成される。
 - 手動で生成したHTMLや関連ファイルは `.gitignore` によって無視。
+
+```bash
+# 例
+```

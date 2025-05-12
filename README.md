@@ -1,6 +1,21 @@
-# 北医AI研究会ホームページ運用ルール
+# 北医AI研究会ホームページ
+北医AI研究会のホームページです。[こちらからアクセス](https://hokumedai.github.io/)
 
-## 1. ブランチ運用ルール
+
+## プロジェクトのセットアップ
+
+このプロジェクトは Git サブモジュールを利用しています。最初にクローンするときは以下の手順を踏んでください。
+
+```bash
+# 1. リポジトリをクローン
+git clone https://github.com/hokumedai/hokumedai.github.io.git
+cd hokumedai.github.io
+
+# 2. サブモジュールを初期化・更新
+git submodule update --init --recursive
+```
+
+## ブランチ運用ルール
 
 ### 個人用作業ブランチ
 
@@ -14,13 +29,13 @@
 - 例: `yamada/update-README`, `yamada/fix-navbar`
 - マージ後は必ず削除する。
 
-## 2. Pull Request（PR）のルール
+## Pull Request（PR）のルール
 
 - PRは必ず `main` ブランチに向けて作成。
 - マージされたらGitHub Actionsが自動でビルド・公開を実行。
 - レビューを必須とし、自己マージは原則禁止（例外があれば明記）。
 
-## 3. HTMLビルドの扱い
+## HTMLビルドの扱い
 
 - HTMLやビルド成果物を手元で生成してPushするのは禁止。
 - HTMLは全てGitHub Actionsで自動生成される。

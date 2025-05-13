@@ -29,7 +29,8 @@ git submodule update --init --recursive
 - マージ後は必ず削除する。
 
 ```bash
-# 例
+# 例: 新しいブランチを作成してチェックアウト
+git checkout -b yamada/new-feature
 ```
 
 ## Pull Request（PR）のルール
@@ -38,6 +39,15 @@ git submodule update --init --recursive
 - マージされたらGitHub Actionsが自動でビルド・公開を実行。
 - レビューを必須とし、自己マージは原則禁止（例外があれば明記）。
 
+```bash
+# 例: PRを作成するための手順
+git checkout -b yamada/new-feature
+git add .
+git commit -m "新機能を追加"
+git push origin yamada/new-feature
+# GitHub上でPRを作成
+```
+
 ## HTMLビルドの扱い
 
 - HTMLやビルド成果物を手元で生成してPushするのは禁止。
@@ -45,5 +55,10 @@ git submodule update --init --recursive
 - 手動で生成したHTMLや関連ファイルは `.gitignore` によって無視。
 
 ```bash
-# 例
+# 例: 手動で生成したHTMLを無視するための.gitignore設定
+/public/
+/resources/_gen/
+/assets/jsconfig.json
+hugo_stats.json
+.hugo_build.lock
 ```

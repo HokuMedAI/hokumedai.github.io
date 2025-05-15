@@ -2,3 +2,18 @@ baseURL = 'https://hokumedai.github.io/'
 languageCode = 'ja-jp'
 title = '北医AI研究会'
 theme = 'ananke'  # デフォルトとして
+
+# メインメニューの設定
+[menu]
+  [[menu.main]]
+    name = "ホーム"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "活動記録"
+    url = "/updates/"
+    weight = 2
+  [[menu.main]]
+    name = "記事"
+    url = "/articles/"
+    weight = 3

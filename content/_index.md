@@ -2,7 +2,7 @@
 title: "北医AI研究会"
 description: "北海道大学医学部の学生を中心に、AI（人工知能）の医療応用について学び、研究する団体です。"
 # featured_image: '/images/header-background.jpg'
-date: 2025-05-10
+date: 2025-05-15
 draft: false
 ---
 
@@ -21,7 +21,8 @@ draft: false
 
 - [公式ホームページ](https://hokumedai.github.io/)
 - [GitHub](https://github.com/hokumedai)
+- [Discord](https://discord.gg/uwaW5evG)
 
 ## お問い合わせ
 
-ご質問やご連絡は、GitHubのIssue機能をご利用ください。
+ご質問やご連絡は、GitHubのIssue機能またはDiscordのDMにてお願いします。

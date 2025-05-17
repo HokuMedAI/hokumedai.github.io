@@ -19,9 +19,9 @@ draft: false
 
 ## リンク
 
-- [公式ホームページ](https://hokumedai.github.io/)
+- [discord](https://discord.gg/uwaW5evG)
 - [GitHub](https://github.com/hokumedai)
 
 ## お問い合わせ
 
-ご質問やご連絡は、GitHubのIssue機能をご利用ください。
+ご質問やご連絡は、[GitHub](https://github.com/hokumedai)のIssue機能または[discord](https://discord.gg/uwaW5evG)のDMにお願いします。

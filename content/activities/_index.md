@@ -6,9 +6,16 @@ draft: false
 ---
 
 ## 勉強会
+{{< button href="/activities/seminar" target="_self" >}}
+勉強会について知る
+{{< /button >}}
 
 ## 定期ミーティング
+{{< button href="/activities/meeting" target="_self" >}}    
+ミーティングを見に行く
+{{< /button >}}
 
 ## もくもく会
-
-## 最新情報
+{{< button href="/activities/mokumoku" target="_self" >}}
+もくもく会はこちらから
+{{< /button >}}

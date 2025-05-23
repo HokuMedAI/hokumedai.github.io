@@ -3,6 +3,9 @@ title: "記事一覧"
 description: "北医AI研究会の活動や医療AI関連の記事を掲載しています"
 date: 2025-05-20
 draft: false
+showBreadcrumbs: false
+showLikes: false
+showViews: false
 ---
 
 ## 記事について

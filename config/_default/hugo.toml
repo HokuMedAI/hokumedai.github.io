@@ -1,25 +1,34 @@
-# -- Site Configuration --
-# Refer to the theme docs for more details about each of these parameters.
+# -- コンフィギュレーション設定 --
+# 以下の内容ページを参照。
+# https://juggernautjp.info/getting-started/configuration/
+# ↑ 日本語翻訳チームによるもの（ちょっと公式と違う）
 # https://blowfish.page/docs/getting-started/
+# ↑ 公式サイト
 
-theme = "blowfish" # UNCOMMENT THIS LINE
-baseURL = "https://hokumedai.github.io/"
-defaultContentLanguage = "ja"
+theme = "blowfish"  
+baseURL = "https://hokumedai.github.io/"  # 公開サイトの絶対 URL
+defaultContentLanguage = "ja"  # 言語インジケーターのないコンテンツは、デフォルトでこの言語になります。
+
+archetype = "archetype"  # Hugo がアーキタイプ ファイル (コンテンツ テンプレート) を検索するディレクトリ
+assetDir = "assets"  # Hugo が Hugo パイプ で使用するアセットファイルを検索するディレクトリ
+contentDir = "content"
 
 # pluralizeListTitles = "true" # hugo function useful for non-english languages, find out more in  https://gohugo.io/getting-started/configuration/#pluralizelisttitles
 
-enableRobotsTXT = true
 summaryLength = 0
 
-buildDrafts = false
-buildFuture = false
+buildDrafts = true  # ビルド時にドラフトを含めるかどうか
+buildExpired = false
+buildFuture = true
 
 enableEmoji = true
+enableGitInfo = true  # 各ページの .GitInfo オブジェクトを有効にします。これにより、各ページの Lastmod パラメータが、そのコンテンツファイルの最終 git commit 日時を使用して更新されます。
+enableRobotsTXT = true
 
 # googleAnalytics = "G-XXXXXXXXX"
 
 [pagination]
-  pagerSize = 100
+  pagerSize = 10
 
 [imaging]
   anchor = 'Center'

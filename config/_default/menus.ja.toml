@@ -27,15 +27,22 @@
   weight = 30
 
 [[main]]
-  pre = "x-twitter"
-  url = "https://X.com/HU_med_ai"
+  pre = "discord"
+  name = "Discord"
+  url = "https://discord.gg/t9kKpVHtyj"
   weight = 40
+
+[[main]]
+  pre = "x-twitter"
+  name = "(旧Twitter)"
+  url = "https://X.com/HU_med_ai"
+  weight = 50
 
 [[main]]
   pre = "github"
   name = "GitHub"
   url = "https://github.com/hokumedai/"
-  weight = 50
+  weight = 60
 
 [[footer]]
   name = "プライバシー"

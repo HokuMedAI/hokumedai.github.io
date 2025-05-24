@@ -1,37 +1,49 @@
 [[main]]
   name = "活動内容"
-  pageRef = "activities"
+  pageRef = "/activities"
   weight = 10
 
 [[main]]
   name = "勉強会"
   parent = "活動内容"
-  pageRef = "activities/seminar"
+  pageRef = "/activities/seminar"
   weight = 20
 
 [[main]]
   name = "定期ミーティング"
   parent = "活動内容"
-  pageRef = "activities/meeting"
+  pageRef = "/activities/meeting"
   weight = 20
 
 [[main]]
   name = "もくもく会"
   parent = "活動内容"
-  pageRef = "activities/mokumoku"
+  pageRef = "/activities/mokumoku"
   weight = 20
 
 [[main]]
   name = "記事"
-  pageRef = "articles"
+  pageRef = "/articles"
   weight = 30
+
+[[main]]
+  pre = "discord"
+  name = "Discord"
+  url = "https://discord.gg/t9kKpVHtyj"
+  weight = 40
+
+[[main]]
+  pre = "x-twitter"
+  name = "(旧Twitter)"
+  url = "https://X.com/HU_med_ai"
+  weight = 50
 
 [[main]]
   pre = "github"
   name = "GitHub"
   url = "https://github.com/hokumedai/"
-  weight = 40
+  weight = 60
 
 [[footer]]
   name = "プライバシー"
-  pageRef = "privacy.md"
+  pageRef = "/privacy"

@@ -3,19 +3,16 @@ title: "活動内容"
 description: "北医AI研究会の活動内容や開催予定を掲載しています"
 date: 2025-05-17
 draft: false
+groupByYear: false
+showBreadcrumbs: false
+showLikes: false
+showViews: false
 ---
+  
 
-## 勉強会
-{{< button href="/activities/seminar" target="_self" >}}
-勉強会について知る
-{{< /button >}}
+主な活動としては、
+- *勉強会*
+- *もくもく会*
+- *ミーティング*  
 
-## 定期ミーティング
-{{< button href="/activities/meeting" target="_self" >}}    
-ミーティングを見に行く
-{{< /button >}}
-
-## もくもく会
-{{< button href="/activities/mokumoku" target="_self" >}}
-もくもく会はこちらから
-{{< /button >}}
+があります、それぞれの活動の詳細は各項目をクリックしてください

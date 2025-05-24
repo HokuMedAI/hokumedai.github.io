@@ -3,6 +3,7 @@ title: "定期ミーティング"
 description: "北医AI研究会の定期ミーティングの情報を掲載しています"
 date: 2025-05-17
 draft: false
+groupByYear: true
 ---
 
 ### 定期ミーティングについて

@@ -9,4 +9,4 @@ draft: false
 勉強会では、AIの基礎知識や医療AIの最新研究を持ち回りでレクチャーします。初めての方はまずこちらの参加がおすすめです！
 
 ### 参加申し込み
-[Discord](https://discord.gg/uwaW5evG)から参加できます。ご連絡お待ちしてます！
+[Discord](https://discord.gg/t9kKpVHtyj)から参加できます。ご連絡お待ちしてます！

@@ -18,4 +18,4 @@ groupByYear: true
 ３階死因究明センター
 
 ### 参加方法
-[Discord](https://discord.gg/uwaW5evG)の「ミーティング」チャンネルにご連絡ください。 
+[Discord](https://discord.gg/t9kKpVHtyj)にご連絡ください。 

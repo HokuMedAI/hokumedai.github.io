@@ -17,7 +17,7 @@ contentDir = "content"
 
 summaryLength = 0
 
-buildDrafts = true  # ビルド時にドラフトを含めるかどうか
+buildDrafts = false  # ビルド時にドラフトを含めるかどうか
 buildExpired = false
 buildFuture = true
 

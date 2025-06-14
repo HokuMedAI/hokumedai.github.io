@@ -15,7 +15,7 @@ groupByYear: true
 第１・３金曜日 16:30~
 
 ### 場所
-３階死因究明センター
+腫瘍病理学教室
 
 ### 参加方法
 [Discord](https://discord.gg/t9kKpVHtyj)にご連絡ください。 

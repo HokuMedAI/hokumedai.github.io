@@ -13,13 +13,13 @@
   name = "定期ミーティング"
   parent = "活動内容"
   pageRef = "/activities/meeting"
-  weight = 20
+  weight = 21
 
 [[main]]
   name = "もくもく会"
   parent = "活動内容"
   pageRef = "/activities/mokumoku"
-  weight = 20
+  weight = 22
 
 [[main]]
   name = "記事"

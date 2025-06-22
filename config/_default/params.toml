@@ -22,7 +22,7 @@ disableTextInHeader = false
 backgroundImageWidth = 1200
 
 defaultBackgroundImage = "images/backgrounds/background.jpg" # used as default for background images 
-defaultFeaturedImage = "images/logo/logo.png" # used as default for featured images in all articles
+defaultFeaturedImage = "images/logo/hokumedai_logo.png" # used as default for featured images in all articles
 
 # highlightCurrentMenuArea = true
 # smartTOC = true

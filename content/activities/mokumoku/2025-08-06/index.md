@@ -4,7 +4,7 @@ description: "第14回もくもく会"
 date: 2025-08-06
 draft: false
 showHero: true
-layoutBackgroundBlur: false
+layoutBackgroundBlur: true
 ---
 
 

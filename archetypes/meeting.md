@@ -3,6 +3,8 @@ title: "タイトルを入力"
 description: "ミーティングの説明を入力"
 date: 2025-01-01
 draft: false
+showHero: true
+layoutBackgroundBlur: false
 ---
 
 ## 開催概要

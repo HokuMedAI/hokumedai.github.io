@@ -1,6 +1,6 @@
 ---
-title: "もくもく会のタイトルを入力"
-description: "もくもく会の説明を入力"
+title: "第１７回もくもく会"
+description: "第１７回もくもく会"
 date: 2025-08-27
 draft: false
 showHero: true

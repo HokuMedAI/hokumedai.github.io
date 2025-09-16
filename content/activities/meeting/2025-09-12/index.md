@@ -16,13 +16,15 @@ layoutBackgroundBlur: true
 
 それぞれの進捗を発表しました。
 
-詳しくは[githubのissue](https://github.com/HokuMedAI/meeting/issues)に記載しております
+学会の抄録締め切りが近く戦慄しました。
 
 ## 一言
 
 部長が購入してくれたカントリーマアムがおいしかったです。
 
 センスありますね。
+
+山田
 
 ## 参加方法
 [Discord](https://discord.gg/t9kKpVHtyj)にご連絡ください。

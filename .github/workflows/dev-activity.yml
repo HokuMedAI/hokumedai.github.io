@@ -1,0 +1,229 @@
+name: Dev Activity
+
+on:
+  issues:
+    types: [opened, closed, reopened]
+  pull_request:
+    types: [opened, closed, merged, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+  release:
+    types: [published]
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Issue Notifications
+        if: github.event_name == 'issues'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+        run: |
+          ACTION="${{ github.event.action }}"
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          ISSUE_NUMBER="${{ github.event.issue.number }}"
+          ISSUE_URL="${{ github.event.issue.html_url }}"
+          USER="${{ github.event.issue.user.login }}"
+          
+          case "$ACTION" in
+            "opened")
+              EMOJI="🐛"
+              ACTION_TEXT="新しいissueが作成されました"
+              COLOR=15844367
+              ;;
+            "closed")
+              EMOJI="✅"
+              ACTION_TEXT="issueがクローズされました"
+              COLOR=5763719
+              ;;
+            "reopened")
+              EMOJI="🔄"
+              ACTION_TEXT="issueが再オープンされました"
+              COLOR=15844367
+              ;;
+          esac
+          
+          curl -H "Content-Type: application/json" \
+               -d "{
+                 \"embeds\": [
+                   {
+                     \"title\": \"$EMOJI $ACTION_TEXT\",
+                     \"description\": \"**#$ISSUE_NUMBER: $ISSUE_TITLE**\",
+                     \"color\": $COLOR,
+                     \"fields\": [
+                       {
+                         \"name\": \"👤 作成者\",
+                         \"value\": \"$USER\",
+                         \"inline\": true
+                       },
+                       {
+                         \"name\": \"🔗 リンク\",
+                         \"value\": \"[Issue #$ISSUE_NUMBER を見る]($ISSUE_URL)\",
+                         \"inline\": true
+                       }
+                     ],
+                     \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)\"
+                   }
+                 ]
+               }" \
+               $DISCORD_WEBHOOK
+
+      - name: Pull Request Notifications
+        if: github.event_name == 'pull_request'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+        run: |
+          ACTION="${{ github.event.action }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          USER="${{ github.event.pull_request.user.login }}"
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          
+          case "$ACTION" in
+            "opened")
+              EMOJI="🔀"
+              ACTION_TEXT="新しいPRが作成されました"
+              COLOR=3447003
+              ;;
+            "closed")
+              if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+                EMOJI="🎉"
+                ACTION_TEXT="PRがマージされました"
+                COLOR=5763719
+              else
+                EMOJI="🚫"
+                ACTION_TEXT="PRがクローズされました"
+                COLOR=15158332
+              fi
+              ;;
+            "reopened")
+              EMOJI="🔄"
+              ACTION_TEXT="PRが再オープンされました"
+              COLOR=3447003
+              ;;
+            "ready_for_review")
+              EMOJI="👀"
+              ACTION_TEXT="PRがレビュー準備完了になりました"
+              COLOR=10181046
+              ;;
+          esac
+          
+          curl -H "Content-Type: application/json" \
+               -d "{
+                 \"embeds\": [
+                   {
+                     \"title\": \"$EMOJI $ACTION_TEXT\",
+                     \"description\": \"**#$PR_NUMBER: $PR_TITLE**\",
+                     \"color\": $COLOR,
+                     \"fields\": [
+                       {
+                         \"name\": \"👤 作成者\",
+                         \"value\": \"$USER\",
+                         \"inline\": true
+                       },
+                       {
+                         \"name\": \"🌿 ブランチ\",
+                         \"value\": \"\`$BRANCH\`\",
+                         \"inline\": true
+                       },
+                       {
+                         \"name\": \"🔗 リンク\",
+                         \"value\": \"[PR #$PR_NUMBER を見る]($PR_URL)\",
+                         \"inline\": true
+                       }
+                     ],
+                     \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)\"
+                   }
+                 ]
+               }" \
+               $DISCORD_WEBHOOK
+
+      - name: PR Review Notifications
+        if: github.event_name == 'pull_request_review'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+        run: |
+          REVIEW_STATE="${{ github.event.review.state }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          REVIEWER="${{ github.event.review.user.login }}"
+          
+          case "$REVIEW_STATE" in
+            "approved")
+              EMOJI="✅"
+              ACTION_TEXT="PRが承認されました"
+              COLOR=5763719
+              ;;
+            "changes_requested")
+              EMOJI="🔄"
+              ACTION_TEXT="PRに変更が要求されました"
+              COLOR=15844367
+              ;;
+            "commented")
+              EMOJI="💬"
+              ACTION_TEXT="PRにレビューコメントが追加されました"
+              COLOR=3447003
+              ;;
+          esac
+          
+          curl -H "Content-Type: application/json" \
+               -d "{
+                 \"embeds\": [
+                   {
+                     \"title\": \"$EMOJI $ACTION_TEXT\",
+                     \"description\": \"**#$PR_NUMBER: $PR_TITLE**\",
+                     \"color\": $COLOR,
+                     \"fields\": [
+                       {
+                         \"name\": \"👤 レビュアー\",
+                         \"value\": \"$REVIEWER\",
+                         \"inline\": true
+                       },
+                       {
+                         \"name\": \"🔗 リンク\",
+                         \"value\": \"[PR #$PR_NUMBER を見る]($PR_URL)\",
+                         \"inline\": true
+                       }
+                     ],
+                     \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)\"
+                   }
+                 ]
+               }" \
+               $DISCORD_WEBHOOK
+
+      - name: Release Notifications
+        if: github.event_name == 'release'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+        run: |
+          RELEASE_NAME="${{ github.event.release.name }}"
+          RELEASE_TAG="${{ github.event.release.tag_name }}"
+          RELEASE_URL="${{ github.event.release.html_url }}"
+          USER="${{ github.event.release.author.login }}"
+          
+          curl -H "Content-Type: application/json" \
+               -d "{
+                 \"embeds\": [
+                   {
+                     \"title\": \"🎉 新しいリリースが公開されました\",
+                     \"description\": \"**$RELEASE_NAME** (\`$RELEASE_TAG\`)\",
+                     \"color\": 5763719,
+                     \"fields\": [
+                       {
+                         \"name\": \"👤 作成者\",
+                         \"value\": \"$USER\",
+                         \"inline\": true
+                       },
+                       {
+                         \"name\": \"🔗 リンク\",
+                         \"value\": \"[リリースを見る]($RELEASE_URL)\",
+                         \"inline\": true
+                       }
+                     ],
+                     \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)\"
+                   }
+                 ]
+               }" \
+               $DISCORD_WEBHOOK

@@ -40,3 +40,35 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Notify Discord
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          LATEST_POST=$(
+            find content -name "*.md" -type f \
+                 -exec stat --format='%Y %n' {} + 2>/dev/null | \
+            sort -rn | \
+            head -1 | \
+            cut -d' ' -f2- || \
+            echo ""
+          )
+          
+          if [ ! -z "$LATEST_POST" ]; then
+            TITLE=$(\
+              awk '/^---$/{flag++; next} 
+                flag==1 && /^title:/{
+                  gsub(/^title: *["\047]?/, "");
+                  gsub(/["\047]? *$/, "");
+                  print; exit}' "$LATEST_POST" ||
+              basename "$LATEST_POST" .md
+            )
+            MESSAGE="新しい記事「$TITLE」を公開しました！"
+          else
+            MESSAGE="ホームページを更新しました！"
+          fi
+          
+          curl -H "Content-Type: application/json" \
+               -d "{\"content\": \"$MESSAGE\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}\"}" \
+               $DISCORD_WEBHOOK

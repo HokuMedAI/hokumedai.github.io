@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       article-title: ${{ steps.get-title.outputs.title }}
+      article-status: ${{ steps.get-title.outputs.status }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -27,25 +28,18 @@ jobs:
       - name: Get latest article title and thumbnail
         id: get-title
         run: |
-          # PRのコミットから追加されたmdファイルを探す
-          LATEST_POST=$(
-            git diff --name-only --diff-filter=A HEAD~1 HEAD | \
-            grep -E '^content/.*\.md$' | \
+          # PRでマージされた全コミットから新規追加または更新されたmdファイルを探す
+          ARTICLE_INFO=$(
+            git diff --name-status --diff-filter=AM ${{ github.event.before }} ${{ github.event.after }} | \
+            grep -E '^[AM]\s+content/.*\.md$' | \
             head -1 || \
             echo ""
           )
 
-          # 追加されたファイルがない場合は更新されたファイルを探す
-          if [ -z "$LATEST_POST" ]; then
-            LATEST_POST=$(
-              git diff --name-only --diff-filter=M HEAD~1 HEAD | \
-              grep -E '^content/.*\.md$' | \
-              head -1 || \
-              echo ""
-            )
-          fi
+          if [ ! -z "$ARTICLE_INFO" ]; then
+            STATUS=$(echo "$ARTICLE_INFO" | awk '{print $1}')
+            LATEST_POST=$(echo "$ARTICLE_INFO" | awk '{print $2}')
 
-          if [ ! -z "$LATEST_POST" ]; then
             TITLE=$(
               awk '/^---$/{flag++; next}
                 flag==1 && /^title:/{
@@ -55,8 +49,10 @@ jobs:
               basename "$LATEST_POST" .md
             )
             echo "title=$TITLE" >> $GITHUB_OUTPUT
+            echo "status=$STATUS" >> $GITHUB_OUTPUT
           else
             echo "title=" >> $GITHUB_OUTPUT
+            echo "status=" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload artifact
@@ -83,9 +79,16 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           ARTICLE_TITLE: ${{ needs.build.outputs.article-title }}
+          ARTICLE_STATUS: ${{ needs.build.outputs.article-status }}
         run: |
           if [ ! -z "$ARTICLE_TITLE" ]; then
-            MESSAGE="新しい記事「$ARTICLE_TITLE」を公開しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
+            if [ "$ARTICLE_STATUS" = "A" ]; then
+              MESSAGE="新しい記事「$ARTICLE_TITLE」を公開しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
+            elif [ "$ARTICLE_STATUS" = "M" ]; then
+              MESSAGE="記事「$ARTICLE_TITLE」を更新しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
+            else
+              MESSAGE="ホームページを更新しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
+            fi
           else
             MESSAGE="ホームページを更新しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
           fi

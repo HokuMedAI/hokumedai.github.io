@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       article-title: ${{ steps.get-title.outputs.title }}
-      thumbnail-url: ${{ steps.get-title.outputs.thumbnail }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,14 +27,23 @@ jobs:
       - name: Get latest article title and thumbnail
         id: get-title
         run: |
+          # PRのコミットから追加されたmdファイルを探す
           LATEST_POST=$(
-            find content -name "*.md" -type f \
-                 -exec stat --format='%Y %n' {} + 2>/dev/null | \
-            sort -rn | \
-            head -1 | \
-            cut -d' ' -f2- || \
+            git diff --name-only --diff-filter=A HEAD~1 HEAD | \
+            grep -E '^content/.*\.md$' | \
+            head -1 || \
             echo ""
           )
+
+          # 追加されたファイルがない場合は更新されたファイルを探す
+          if [ -z "$LATEST_POST" ]; then
+            LATEST_POST=$(
+              git diff --name-only --diff-filter=M HEAD~1 HEAD | \
+              grep -E '^content/.*\.md$' | \
+              head -1 || \
+              echo ""
+            )
+          fi
 
           if [ ! -z "$LATEST_POST" ]; then
             TITLE=$(
@@ -47,28 +55,8 @@ jobs:
               basename "$LATEST_POST" .md
             )
             echo "title=$TITLE" >> $GITHUB_OUTPUT
-
-            # 記事と同じディレクトリ内の画像ファイルを探す
-            POST_DIR=$(dirname "$LATEST_POST")
-            THUMBNAIL=$(find "$POST_DIR" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" -o -iname "*.webp" \) | head -1)
-
-            if [ ! -z "$THUMBNAIL" ]; then
-              # public ディレクトリ内の対応する画像パスを構築
-              RELATIVE_PATH=$(echo "$THUMBNAIL" | sed 's|^content/||')
-              PUBLIC_PATH="public/$RELATIVE_PATH"
-              if [ -f "$PUBLIC_PATH" ]; then
-                # GitHub Pages の URL に変換
-                URL_PATH=$(echo "$RELATIVE_PATH" | sed 's| |%20|g')
-                echo "thumbnail=https://hokumedai.github.io/$URL_PATH" >> $GITHUB_OUTPUT
-              else
-                echo "thumbnail=" >> $GITHUB_OUTPUT
-              fi
-            else
-              echo "thumbnail=" >> $GITHUB_OUTPUT
-            fi
           else
             echo "title=" >> $GITHUB_OUTPUT
-            echo "thumbnail=" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload artifact
@@ -95,40 +83,19 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           ARTICLE_TITLE: ${{ needs.build.outputs.article-title }}
-          THUMBNAIL_URL: ${{ needs.build.outputs.thumbnail-url }}
         run: |
           if [ ! -z "$ARTICLE_TITLE" ]; then
-            MESSAGE="新しい記事「$ARTICLE_TITLE」を公開しました！"
+            MESSAGE="新しい記事「$ARTICLE_TITLE」を公開しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
           else
-            MESSAGE="ホームページを更新しました！"
+            MESSAGE="ホームページを更新しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
           fi
 
-          # Discord Webhook用のJSONペイロードを構築
-          if [ ! -z "$THUMBNAIL_URL" ]; then
-            # サムネイルがある場合はembedを使用
-            PAYLOAD=$(cat <<EOF
+          PAYLOAD=$(cat <<EOF
           {
-            "content": "$MESSAGE",
-            "embeds": [{
-              "title": "$ARTICLE_TITLE",
-              "url": "${{ steps.deployment.outputs.page_url }}",
-              "image": {
-                "url": "$THUMBNAIL_URL"
-              },
-              "color": 5814783
-            }]
+            "content": "$MESSAGE"
           }
           EOF
-            )
-          else
-            # サムネイルがない場合はシンプルなメッセージ
-            PAYLOAD=$(cat <<EOF
-          {
-            "content": "$MESSAGE\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
-          }
-          EOF
-            )
-          fi
+          )
 
           curl -H "Content-Type: application/json" \
                -d "$PAYLOAD" \

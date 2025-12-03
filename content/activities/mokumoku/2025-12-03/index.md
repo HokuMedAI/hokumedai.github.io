@@ -1,6 +1,6 @@
 ---
-title: "git練習"
-description: "gitについて教わりました"
+title: "第30回もくもく会"
+description: "第30回もくもく会"
 date: 2025-12-03
 draft: false
 showHero: true
@@ -14,4 +14,4 @@ layoutBackgroundBlur: false
 
 ## 一言
 
-勉強になりました、早く慣れたいですね
+gitについて教わりました。勉強になりました、早く慣れたいです。

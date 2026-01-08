@@ -7,7 +7,8 @@ showHero: true
 layoutBackgroundBlur: true
 categories: ["カテゴリ1", "カテゴリ2"]
 tags: ["タグ1", "タグ2"]
-author: "著者名"
+authors:
+  - "hokuimedai"
 ---
 
 ## はじめに

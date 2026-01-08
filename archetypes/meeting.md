@@ -5,6 +5,8 @@ date: 2025-01-01
 draft: false
 showHero: true
 layoutBackgroundBlur: false
+authors:
+  - "hokuimedai"
 ---
 
 ## 開催概要

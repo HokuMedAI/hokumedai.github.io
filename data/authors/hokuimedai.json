@@ -1,0 +1,15 @@
+{
+    "name": "北医AI研究会",
+    "bio": "北医AI研究会は、北海道大学医学部を中心に、AIについて学び、研究する団体です。",
+    "social": [
+        {
+            "github": "https://github.com/hokumedai"
+        },
+        {
+            "x-twitter": "https://x.com/HU_med_ai"
+        },
+        {
+            "discord": "https://discord.gg/t9kKpVHtyj"
+        }
+    ]
+}

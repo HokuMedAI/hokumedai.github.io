@@ -5,6 +5,8 @@ date: {{ .Date }}
 draft: false
 showhero: true
 layoutBackgroundBlow: true
+authors:
+  - "hokuimedai"
 ---
 
 ## 開催概要

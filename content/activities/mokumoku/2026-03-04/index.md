@@ -7,6 +7,7 @@ showHero: true
 layoutBackgroundBlur: false
 authors:
   - "hokuimedai"
+  - "mbyamaguchi"
 ---
 
 ## 開催概要

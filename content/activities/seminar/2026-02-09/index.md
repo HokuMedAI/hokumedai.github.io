@@ -1,7 +1,7 @@
 ---
 title: "1月定期勉強会開催報告"
 description: "1月定期勉強会開催報告"
-date: 2026-1-30
+date: 2026-01-30
 draft: false
 showHero: true
 layoutBackgroundBlur: true

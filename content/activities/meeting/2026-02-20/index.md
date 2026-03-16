@@ -7,6 +7,8 @@ showHero: true
 layoutBackgroundBlur: false
 authors:
   - "enda"
+tags:
+  - "The Leader Has Spoken"
 ---
 
 ## 開催概要

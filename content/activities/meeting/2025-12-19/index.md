@@ -5,6 +5,8 @@ date: 2025-12-19
 draft: false
 showHero: true
 layoutBackgroundBlur: false
+tags:
+  - "The Leader Has Spoken"
 ---
 
 ## 開催概要

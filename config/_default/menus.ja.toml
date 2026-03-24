@@ -27,6 +27,11 @@
   weight = 30
 
 [[main]]
+  name = "タグ"
+  pageRef = "/tags"
+  weight = 35
+
+[[main]]
   pre = "discord"
   name = "Discord"
   url = "https://discord.gg/t9kKpVHtyj"
@@ -47,3 +52,14 @@
 [[footer]]
   name = "プライバシー"
   pageRef = "/privacy"
+  weight = 10
+
+[[footer]]
+  name = "タグ"
+  pageRef = "/tags"
+  weight = 20
+
+[[footer]]
+  name = "著者"
+  pageRef = "/authors"
+  weight = 30

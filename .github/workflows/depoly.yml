@@ -10,6 +10,7 @@ jobs:
     outputs:
       article-title: ${{ steps.get-title.outputs.title }}
       article-status: ${{ steps.get-title.outputs.status }}
+      article-path: ${{ steps.get-title.outputs.path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,11 +49,14 @@ jobs:
                   print; exit}' "$LATEST_POST" ||
               basename "$LATEST_POST" .md
             )
+            ARTICLE_URL_PATH=$(echo "$LATEST_POST" | sed 's|^content/||' | sed 's|index\.md$||' | sed 's|\.md$|/|')
             echo "title=$TITLE" >> $GITHUB_OUTPUT
             echo "status=$STATUS" >> $GITHUB_OUTPUT
+            echo "path=$ARTICLE_URL_PATH" >> $GITHUB_OUTPUT
           else
             echo "title=" >> $GITHUB_OUTPUT
             echo "status=" >> $GITHUB_OUTPUT
+            echo "path=" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload artifact
@@ -83,12 +87,16 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           ARTICLE_TITLE: ${{ needs.build.outputs.article-title }}
           ARTICLE_STATUS: ${{ needs.build.outputs.article-status }}
+          ARTICLE_PATH: ${{ needs.build.outputs.article-path }}
         run: |
+          BASE_URL="https://hokumedai.github.io"
+          ARTICLE_URL="${BASE_URL}/${ARTICLE_PATH}"
+
           if [ ! -z "$ARTICLE_TITLE" ]; then
             if [ "$ARTICLE_STATUS" = "A" ]; then
-              MESSAGE="新しい記事「$ARTICLE_TITLE」を公開しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
+              MESSAGE="新しい記事「$ARTICLE_TITLE」を公開しました！\nURLはこちらから↓\n${ARTICLE_URL}"
             elif [ "$ARTICLE_STATUS" = "M" ]; then
-              MESSAGE="記事「$ARTICLE_TITLE」を更新しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
+              MESSAGE="記事「$ARTICLE_TITLE」を更新しました！\nURLはこちらから↓\n${ARTICLE_URL}"
             else
               MESSAGE="ホームページを更新しました！\nURLはこちらから↓\n${{ steps.deployment.outputs.page_url }}"
             fi

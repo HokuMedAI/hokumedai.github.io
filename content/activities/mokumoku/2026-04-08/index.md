@@ -4,7 +4,7 @@ description: "第45回もくもく会"
 date: 2026-04-08
 draft: false
 showHero: true
-layoutBackgroundBlur: false
+layoutBackgroundBlur: true
 authors:
   - "hokuimedai"
   - "ymd000"
@@ -13,8 +13,15 @@ authors:
 ## 開催概要
 
 - **日時**: 2026/4/8 16:30~  
-- **人数**: ひとり  
+- **人数**: 山田 + 新入生1名  
 
 ## 一言
 
-(仮)
+新入生が1人来てくれました！  
+履修相談やプログラミングなどお菓子を食べながら一緒に取り組みました。  
+今日来てくれた方はプログラミング未経験のようでしたが、数学・物理好きとのこと。  
+前途有望ですね！  
+
+もくもく会は毎週水曜日に開催中です！  
+お待ちしてます！  
+

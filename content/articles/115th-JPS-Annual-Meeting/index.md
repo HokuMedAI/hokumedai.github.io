@@ -1,14 +1,13 @@
 ---
 title: "本研究会の山田篤司が第115回日本病理学会総会で学部学生ポスター優秀賞を受賞しました。"
 description: "本研究会の山田篤司が第115回日本病理学会総会において学部学生ポスター優秀賞を受賞しました。"
-date: 2026-04-19T10:55:01+09:00
-draft: true
+date: 2026-04-19
+draft: false
 showHero: true
 layoutBackgroundBlur: true
-categories: ["カテゴリ1", "カテゴリ2"]
-tags: ["タグ1", "タグ2"]
+tags: [academic-conference]
 authors:
-  - "hokuimedai"
+  - "murakami"
 ---
 ## 概要
 

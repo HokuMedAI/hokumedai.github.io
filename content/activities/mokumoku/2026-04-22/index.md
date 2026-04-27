@@ -1,6 +1,6 @@
 ---
-title: "第46回もくもく会"
-description: "第46回もくもく会"
+title: "第47回もくもく会"
+description: "第47回もくもく会"
 date: 2026-04-22
 draft: false
 showHero: true

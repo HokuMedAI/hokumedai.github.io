@@ -1,7 +1,7 @@
 ---
 title: "もくもく会"
 description: "北医AI研究会のもくもく会の情報を掲載しています"
-date: 2025-04-29
+date: 2025-05-17
 draft: false
 ---
 

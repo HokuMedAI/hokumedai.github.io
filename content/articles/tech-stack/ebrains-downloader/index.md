@@ -66,13 +66,13 @@ rgw.cscs.ch  ← ここが不安定
 ### 使い方
 
 ```bash
-python run.py --diagnosis "Fibrous meningioma"
+uv run run.py --diagnosis "Fibrous meningioma"
 ```
 
 複数診断名の同時指定も可。
 
 ```bash
-python run.py --diagnosis "Fibrous meningioma" "Glioblastoma"
+uv run run.py --diagnosis Meningioma Schwannoma
 ```
 
 ### 技術スタック

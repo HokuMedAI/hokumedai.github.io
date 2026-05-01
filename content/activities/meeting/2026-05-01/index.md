@@ -1,6 +1,6 @@
 ---
-title: "研究ミーティング"
-description: "ミーティングの説明を入力"
+title: "2026年5月研究ミーティング①"
+description: "5月一回目のミーティング"
 date: 2026-05-01
 draft: false
 showHero: true

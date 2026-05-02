@@ -1,6 +1,6 @@
 ---
-title: "EBRAINSのデータセットがダウンロードできない"
-description: "EBRAINSのデータセットがダウンロードできない"
+title: "EBRAINSのWSIデータをダウンロードするCLIツールを作った"
+description: "EBRAINSのWSIデータをダウンロードするCLIツールを作った"
 date: 2026-04-28
 draft: false
 showHero: true
@@ -9,37 +9,33 @@ authors:
   - "ymd000"
 ---
 
-## この記事でわかること
+## TL;DR
 
-- EBRAINSのGUIダウンロードが失敗しやすい理由
-- `requests` + `fairgraph` + `tqdm` を使った自動ダウンロードスクリプトの作り方
-- リトライ・レジューム（途中再開）の実装方法
+- **EBRAINSからのWSI(Whole Slide Image)のダウンロードを自動で行うコマンドラインツール[ebrains-downloader](https://github.com/HokuMedAI/ebrains-downloader)** を作成した
+- 背景：**EBRAINSのGUIダウンロードはバックエンド（`rgw.cscs.ch`）の不安定さでタイムアウトしやすい**
 
----
+## EBRAINSとは
 
-## そもそもEBRAINSって何？
+[EBRAINS](https://ebrains.eu/) は欧州の神経科学データプラットフォームで、脳画像や病理データなどの研究データが公開されている。
 
-[EBRAINS](https://ebrains.eu/) は欧州の神経科学データプラットフォームで、脳画像や病理データなどの研究データが公開されている。今回はそこにある病理画像データセット（`.ndpi`形式、1ファイル数GB）を大量にダウンロードしたかった。
+### やりたかったこと
 
----
+病理画像のWSIデータ（`.ndpi`形式、1ファイル数GB、500ファイルほど）をダウンロードしたかった。
 
-## GUIからのダウンロードが全然うまくいかない
+## EBRAINSの問題点
 
-### ZIPダウンロードを試みた
+### 試みたこと
 
-まず「まとめてZIPでダウンロード」を試みた。
+- ZIPでダウンロード  
+ファイル破損していて解凍できず。
 
-が、**失敗。**
+- GUIで複数ファイルを一度にダウンロード  
+最初は30ファイルほどダウンロードしようとしたがもちろんうまくいかず、最大2,3ファイルが一度にできる限度のようだ。  
+このままでは画面の前にかじりついたまま作業しなければならない。
 
-よく考えると当たり前で、57ファイル × 約1.5GB = 約85GB をサーバー側で圧縮しながら1本のストリームで送ってくるわけで、途中で切れたら**最初からやり直し**になる。実際タイムアウトで切れた。
+### なぜうまくいかないか
 
-### 個別にGUIからダウンロードを試みた
-
-じゃあ1ファイルずつブラウザからダウンロードしようとしたが、これも途中で切れることがあった。ブラウザはレジューム（途中再開）に対応していないことが多いので、切れたら全部やり直し。1.5GBを何度もダウンロードし直すのはさすがにきつい。
-
-### 原因
-
-EBRAINSのデータは実際には裏側のストレージ（`rgw.cscs.ch`、スイスのCSCSが運営）から配信されていて、プロキシ経由の構造になっている。
+根本的な原因は、**EBRAINSのデータが裏側のストレージ（`rgw.cscs.ch`、スイスのCSCSが運営）から配信されていて、このバックエンドが一時的に不安定**なことにあるようだ。
 
 ```
 ブラウザ
@@ -49,62 +45,46 @@ data-proxy.ebrains.eu
 rgw.cscs.ch  ← ここが不安定
 ```
 
-このバックエンドが一時的に応答を止めることがあり、タイムアウトが発生する。GUIでもスクリプトでも同じ経路を通るので避けられない。
+## 作成したCLIツールの紹介：[ebrains-downloader](https://github.com/HokuMedAI/ebrains-downloader)
 
----
+### インストール
 
-## 自動ダウンロードスクリプトを作った
+インストールは不要。[uvx](https://docs.astral.sh/uv/)から実行可能:
 
-### 作ったもの
-
-[ebrains-downloader](https://github.com/HokuMedAI/ebrains-downloader)
-1. EBRAINSにログインしてトークンを取得
-2. `annotation.csv`（UUID・診断名の対応表）を取得
-3. 指定した診断名でフィルタリング
-4. 該当ファイルを順番にダウンロード（リトライ・レジューム付き）
+```bash
+uvx --from git+https://github.com/HokuMedAI/ebrains-downloader ebrains-downloader --diagnosis <DIAGNOSIS>
+```
 
 ### 使い方
 
 ```bash
-uv run run.py --diagnosis "Fibrous meningioma"
+alias ebrains="uvx --from git+https://github.com/HokuMedAI/ebrains-downloader ebrains-downloader"
+ebrains --diagnosis Meningioma
+ebrains --diagnosis Meningioma Schwannoma
+ebrains --diagnosis "Fibrous meningioma" --output /data/ebrains
 ```
 
-複数診断名の同時指定も可。
+| オプション | 説明 | デフォルト |
+|---|---|---|
+| `--diagnosis` | 診断名（必須、複数指定可） | — |
+| `--output` | 出力ディレクトリ | `downloads` |
 
-```bash
-uv run run.py --diagnosis Meningioma Schwannoma
-```
-
-### 技術スタック
-
-| ライブラリ | 用途 |
-|---|---|
-| `fairgraph` | EBRAINSのKnowledge GraphへのOAuth認証・トークン取得 |
-| `requests` | HTTPダウンロード（ストリーミング・レジューム対応） |
-| `tqdm` | プログレスバー表示 |
-
-### レジューム対応
-
-HTTPの `Range` ヘッダーを使って、途中まで落とせたファイルの**続きから再開**できるようにした。
+### 出力
 
 ```
-# 例：500MB済みなら
-Range: bytes=524288000-
+downloads/
+├── annotation.csv
+├── Meningioma/
+│   ├── <uuid>.ndpi
+│   └── ...
+└── Fibrous meningioma/
+    ├── <uuid>.ndpi
+    └── ...
 ```
 
-ファイルが中途半端に残っていても、サイズを読んで続きをリクエストするだけ。
+**途中で中断しても自動でレジューム**するので、タイムアウトが発生しても最初からやり直す必要はない。
 
-### リトライ対応
-
-ネットワーク系のエラー（タイムアウト・接続切断など）が出たら最大5回まで自動でリトライする。実際の動作ログ：
+### 実際に使ってみる
 
 ![実際の動作ログ](/images/screenshot/Screenshot_20260428_161445.jpg)
-
 2番目のファイルで465MBのところでタイムアウトが発生したが、そこから自動で再開して無事完了している。
-
----
-
-## まとめ
-
-GUIからのダウンロードがうまくいかない場合、原因はだいたいサーバー側の不安定さで、こちら側でできることは**気合いで粘る**くらい。  
-スクリプト化してしまえばあとは放置でよくなるので、大量ファイルのダウンロードには素直に自動化するのが吉。

@@ -17,7 +17,7 @@ authors:
 ## EBRAINSとは
 
 [EBRAINS](https://ebrains.eu/) は欧州の神経科学データプラットフォームで、脳画像や病理データなどの研究データが公開されている。  
-[The Digital Brain Tumour Atlas](https://search.kg.ebrains.eu/instances/8fc108ab-e2b4-406f-8999-60269dc1f994)から脳腫瘍のHE染色のWSIがダウンロードできる。
+[The Digital Brain Tumour Atlas](https://search.kg.ebrains.eu/instances/8fc108ab-e2b4-406f-8999-60269dc1f994)から脳腫瘍のHE染色のWSI(`.ndpi`形式、1ファイル数GB)がダウンロードできる。
 
 ## EBRAINSの問題点
 

@@ -6,7 +6,7 @@ draft: false
 showHero: true
 layoutBackgroundBlur: true
 authors:
-  - "hokuimedai"
+  - "nissy"
 ---
 
 ## 開催概要

@@ -17,12 +17,12 @@ title = "北医AI研究会"
 [params.author]
 name = "北医AI研究会"
 #   email = "youremail@example.com"
-#   image = "img/blowfish_logo.png"
+image = "img/blowfish_logo.png"
 #   imageQuality = 96
 #   headline = "北海道大学医学生によるAIについての研究"
 #   bio = "A little bit about you"
 links = [
-#     { email = "mailto:hello@your_domain.com" },
+     { email = "mailto:hello@your_domain.com" },
 #     { link = "https://link-to-some-website.com/" },
 #     { amazon = "https://www.amazon.com/hz/wishlist/ls/wishlist-id" },
 #     { apple = "https://www.apple.com" },

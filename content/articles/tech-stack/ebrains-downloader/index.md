@@ -1,6 +1,6 @@
 ---
-title: "EBRAINSのデータセットがダウンロードできない"
-description: "EBRAINSのデータセットがダウンロードできない"
+title: "EBRAINSのWSIデータをダウンロードするCLIツールを作った"
+description: "EBRAINSのGUIダウンロードが不安定な問題を解消するため、タイムアウト時の自動再試行機能を備えたCLIツールを作成した"
 date: 2026-04-28
 draft: false
 showHero: true
@@ -9,37 +9,30 @@ authors:
   - "ymd000"
 ---
 
-## この記事でわかること
+## TL;DR
 
-- EBRAINSのGUIダウンロードが失敗しやすい理由
-- `requests` + `fairgraph` + `tqdm` を使った自動ダウンロードスクリプトの作り方
-- リトライ・レジューム（途中再開）の実装方法
+- **EBRAINSからのWSI(Whole Slide Image)のダウンロードを自動で行うコマンドラインツール[ebrains-downloader](https://github.com/HokuMedAI/ebrains-downloader)** を作成した
+- 背景：**EBRAINSのGUIダウンロードはバックエンド（`rgw.cscs.ch`）の不安定さでタイムアウトしやすい**
 
----
+## EBRAINSとは
 
-## そもそもEBRAINSって何？
+[EBRAINS](https://ebrains.eu/) は欧州の神経科学データプラットフォームで、脳画像や病理データなどの研究データが公開されている。  
+[The Digital Brain Tumour Atlas](https://search.kg.ebrains.eu/instances/8fc108ab-e2b4-406f-8999-60269dc1f994)から脳腫瘍のHE染色のWSI(`.ndpi`形式、1ファイル数GB)がダウンロードできる。
 
-[EBRAINS](https://ebrains.eu/) は欧州の神経科学データプラットフォームで、脳画像や病理データなどの研究データが公開されている。今回はそこにある病理画像データセット（`.ndpi`形式、1ファイル数GB）を大量にダウンロードしたかった。
+## EBRAINSの問題点
 
----
+**試みたこと**
 
-## GUIからのダウンロードが全然うまくいかない
+- ZIPでダウンロード  
+ダウンロードが途中で中断されるためか、zipファイルが破損していて解凍できず。
 
-### ZIPダウンロードを試みた
+- GUIで複数ファイルを一度にダウンロード  
+最初は30ファイルほどダウンロードしようとしたがやはりうまくいかず、最大2,3ファイルが一度にできる限度のようだ。  
+このままでは画面の前にかじりついたまま作業しなければならない。
 
-まず「まとめてZIPでダウンロード」を試みた。
+**なぜうまくいかないか**
 
-が、**失敗。**
-
-よく考えると当たり前で、57ファイル × 約1.5GB = 約85GB をサーバー側で圧縮しながら1本のストリームで送ってくるわけで、途中で切れたら**最初からやり直し**になる。実際タイムアウトで切れた。
-
-### 個別にGUIからダウンロードを試みた
-
-じゃあ1ファイルずつブラウザからダウンロードしようとしたが、これも途中で切れることがあった。ブラウザはレジューム（途中再開）に対応していないことが多いので、切れたら全部やり直し。1.5GBを何度もダウンロードし直すのはさすがにきつい。
-
-### 原因
-
-EBRAINSのデータは実際には裏側のストレージ（`rgw.cscs.ch`、スイスのCSCSが運営）から配信されていて、プロキシ経由の構造になっている。
+根本的な原因は、**EBRAINSのデータが裏側のストレージ（`rgw.cscs.ch`、スイスのCSCSが運営）から配信されていて、このバックエンドが一時的に不安定**なことにあるようだ。
 
 ```
 ブラウザ
@@ -49,62 +42,53 @@ data-proxy.ebrains.eu
 rgw.cscs.ch  ← ここが不安定
 ```
 
-このバックエンドが一時的に応答を止めることがあり、タイムアウトが発生する。GUIでもスクリプトでも同じ経路を通るので避けられない。
+## 作成したCLIツールの紹介：[ebrains-downloader](https://github.com/HokuMedAI/ebrains-downloader)
 
----
+**Usage**
 
-## 自動ダウンロードスクリプトを作った
-
-### 作ったもの
-
-[ebrains-downloader](https://github.com/HokuMedAI/ebrains-downloader)
-1. EBRAINSにログインしてトークンを取得
-2. `annotation.csv`（UUID・診断名の対応表）を取得
-3. 指定した診断名でフィルタリング
-4. 該当ファイルを順番にダウンロード（リトライ・レジューム付き）
-
-### 使い方
+uvxの場合:
 
 ```bash
-uv run run.py --diagnosis "Fibrous meningioma"
+uvx --from git+https://github.com/HokuMedAI/ebrains-downloader ebrains-downloader --diagnosis Haemangiopericytoma --output /path/to/output
+
+# 複数指定
+uvx --from git+https://github.com/HokuMedAI/ebrains-downloader ebrains-downloader --diagnosis Haemangiopericytoma Schwannoma
+# スペースを含む場合はクォートで囲む
+uvx --from git+https://github.com/HokuMedAI/ebrains-downloader ebrains-downloader --diagnosis "Fibrous meningioma"
 ```
 
-複数診断名の同時指定も可。
+git clone + uv runを使う場合:
 
 ```bash
-uv run run.py --diagnosis Meningioma Schwannoma
+git clone https://github.com/HokuMedAI/ebrains-downloader
+cd ebrains-downloader
+uv run ebrains-downloader --diagnosis Haemangiopericytoma --output /path/to/output 
 ```
 
-### 技術スタック
+**Arguments**
 
-| ライブラリ | 用途 |
-|---|---|
-| `fairgraph` | EBRAINSのKnowledge GraphへのOAuth認証・トークン取得 |
-| `requests` | HTTPダウンロード（ストリーミング・レジューム対応） |
-| `tqdm` | プログレスバー表示 |
+| オプション | 説明 | デフォルト |
+|---|---|---|
+| `--diagnosis` | 診断名（必須、複数指定可） | — |
+| `--output` | 出力ディレクトリ | `downloads` |
 
-### レジューム対応
-
-HTTPの `Range` ヘッダーを使って、途中まで落とせたファイルの**続きから再開**できるようにした。
+**Output structure**
 
 ```
-# 例：500MB済みなら
-Range: bytes=524288000-
+downloads/
+├── annotation.csv
+├── Haemangiopericytoma/
+│   ├── <uuid>.ndpi
+│   └── ...
+└── Fibrous meningioma/
+    ├── <uuid>.ndpi
+    └── ...
 ```
 
-ファイルが中途半端に残っていても、サイズを読んで続きをリクエストするだけ。
-
-### リトライ対応
-
-ネットワーク系のエラー（タイムアウト・接続切断など）が出たら最大5回まで自動でリトライする。実際の動作ログ：
-
+**Auto-resume**
 ![実際の動作ログ](/images/screenshot/Screenshot_20260428_161445.jpg)
-
 2番目のファイルで465MBのところでタイムアウトが発生したが、そこから自動で再開して無事完了している。
 
----
-
-## まとめ
-
-GUIからのダウンロードがうまくいかない場合、原因はだいたいサーバー側の不安定さで、こちら側でできることは**気合いで粘る**くらい。  
-スクリプト化してしまえばあとは放置でよくなるので、大量ファイルのダウンロードには素直に自動化するのが吉。
+## おわりに
+CLIツールを自作(?)したのは初めてだったが、手作業でダウンロードを行う手間を考えると作ってよかったと思う。  
+課題として、6時間ほどでアクセスが途切れてしまうため、100ファイル程度しかダウンロードできない点が挙げられる。

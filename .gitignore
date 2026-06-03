@@ -1,18 +1,53 @@
-/public/
-/resources/_gen/
-/assets/jsconfig.json
+# Ignore everything by default
+*
+
+# Allow directories
+!archetypes/
+!assets/
+!config/
+!content/
+!data/
+!themes/
+
+# Allow files in root
+!.gitignore
+!README.md
+!new_page.py
+
+# Allow only default archetypes (whitelist)
+!archetypes/article.md
+!archetypes/default.md
+!archetypes/meeting.md
+!archetypes/mokumoku.md
+!archetypes/seminar.md
+
+# Allow all files recursively under tracked directories
+!assets/**/
+!assets/**
+!config/**/
+!config/**
+!content/**/
+!content/**
+!data/**/
+!data/**
+!themes/**/
+!themes/**
+
+
+# Ignore build artifacts
+public/
+resources/_gen/
+assets/jsconfig.json
 hugo_stats.json
-
-.DS_Store
-
 .hugo_build.lock
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# Vim temporary files
+# Ignore OS/editor files
+.DS_Store
 *.swp
 *.swo
 *~
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo

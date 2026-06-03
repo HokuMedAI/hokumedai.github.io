@@ -6,7 +6,7 @@ draft: false
 showHero: true
 layoutBackgroundBlur: false
 authors:
-  - " nissy"
+  - "nissy"
 ---
 
 ## 開催概要
@@ -17,4 +17,8 @@ authors:
 ## 
 いよいよ30℃　暑くなりましたね　
 
-夏バテしないで、頑張りましょー　
+今日はgitignoreをつかいました
+あとはもくもく会の自分用のテンプレートをつくりました
+git便利ですね
+
+明日の泌尿器頑張ります
